@@ -11,12 +11,20 @@ public class CourierCredentials {
         return new CourierCredentials(courier.login, courier.password);
     }
 
-    public static  CourierCredentials getCourierCredentialsWithoutLogin(Courier courier){
+    public static  CourierCredentials getCourierCredentialsWithEmptyLogin(Courier courier){
         return new CourierCredentials("", courier.password);
     }
 
-    public static  CourierCredentials getCourierCredentialsWithoutPassword(Courier courier){
+    public static  CourierCredentials getCourierCredentialsWithoutLogin(Courier courier){
+        return new CourierCredentials(null, courier.password);
+    }
+
+    public static  CourierCredentials getCourierCredentialsWithEmptyPassword(Courier courier){
         return new CourierCredentials(courier.login, "");
+    }
+
+    public static  CourierCredentials getCourierCredentialsWithoutPassword(Courier courier){
+        return new CourierCredentials(courier.login, null);
     }
 
     public static  CourierCredentials getChangedLoginCourierCredentials(Courier courier){

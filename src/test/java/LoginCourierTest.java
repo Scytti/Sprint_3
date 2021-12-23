@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 
 public class LoginCourierTest {
     private CourierClient courierClient;
@@ -33,14 +34,24 @@ public class LoginCourierTest {
         assertThat("Cour ID is incorrect",courierId, is(not(0)));
     }
 
-    //если какого-то поля нет, запрос возвращает ошибку;
+    //если не передать какое-то поле, вернется правильный кстатус код
     @Test
     public void testMessageWhenCourierTryToLoginWithoutLoginOrPassword(){
-        String messageWithoutLogin = courierClient.unsuccessfulLoginWithoutLoginOrPassword(CourierCredentials.getCourierCredentialsWithoutLogin(courier));
-        String messageWithoutPassword  = courierClient.unsuccessfulLoginWithoutLoginOrPassword(CourierCredentials.getCourierCredentialsWithoutPassword(courier));
+        int messageWithoutLogin = courierClient.unsuccessfulLoginWithoutLoginOrPassword(CourierCredentials.getCourierCredentialsWithoutLogin(courier));
+        int messageWithoutPassword  = courierClient.unsuccessfulLoginWithoutLoginOrPassword(CourierCredentials.getCourierCredentialsWithoutPassword(courier));
 
-        assertThat("Incorrect message if no login",messageWithoutLogin, is("Недостаточно данных для входа"));
-        assertThat("Incorrect message if no password",messageWithoutPassword, is("Недостаточно данных для входа"));
+        assertEquals("Incorrect message if login without login",400, messageWithoutLogin);
+        assertEquals("Incorrect status code if login without password",400,messageWithoutPassword);
+    }
+
+    //если какое-то поле пустое, запрос возвращает ошибку;
+    @Test
+    public void testMessageWhenCourierTryToLoginWithEmptyLoginOrPassword(){
+        String messageWithoutLogin = courierClient.unsuccessfulLoginWithEmptyLoginOrPassword(CourierCredentials.getCourierCredentialsWithEmptyLogin(courier));
+        String messageWithoutPassword  = courierClient.unsuccessfulLoginWithEmptyLoginOrPassword(CourierCredentials.getCourierCredentialsWithEmptyPassword(courier));
+
+        assertThat("Incorrect message if login is empty",messageWithoutLogin, is("Недостаточно данных для входа"));
+        assertThat("Incorrect message if password is empty",messageWithoutPassword, is("Недостаточно данных для входа"));
     }
 
     //система вернёт ошибку, если неправильно указать логин или пароль; если авторизоваться под несуществующим пользователем, запрос возвращает ошибку;

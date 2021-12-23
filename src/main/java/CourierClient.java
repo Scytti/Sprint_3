@@ -58,7 +58,7 @@ public class CourierClient extends RestAssuredClient{
      }
 
     @Step
-    public String unsuccessfulLoginWithoutLoginOrPassword(CourierCredentials courierCredentials){
+    public String unsuccessfulLoginWithEmptyLoginOrPassword(CourierCredentials courierCredentials){
         return given()
                 .spec(getBaseSpec())
                 .body(courierCredentials)
@@ -68,6 +68,18 @@ public class CourierClient extends RestAssuredClient{
                 .statusCode(400)
                 .extract()
                 .path("message");
+    }
+
+    @Step
+    public int unsuccessfulLoginWithoutLoginOrPassword(CourierCredentials courierCredentials){
+        return given()
+                .spec(getBaseSpec())
+                .body(courierCredentials)
+                .when()
+                .post(COURIER_PATH + "login")
+                .then()
+                .extract()
+                .statusCode();
     }
 
     @Step
